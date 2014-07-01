@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [ $1 -a $1 = "untrusted" ]; then
+	if [ ! -d ./certificate ]; then
+		echo "Create an untrusted key pair (just run "
+		echo "openssl req -new -x509 -nodes -keyout key_pair.pem -out untrusted_cert.pem"
+		echo ") so you have an un-trusted cert to validate against."
+		exit -1
+	fi
+
+	digital_cert="untrusted_cert/untrusted_cert.pem"
+	key_pair="untrusted_cert/key_pair.pem"
+else
+	if [ ! -d ./certificate ]; then
+		echo "Run build.sh before trying to start the server!"
+		exit -1
+	fi
+
+	digital_cert="certificate/digital_certificate.cer"
+	key_pair="certificate/key_pair.pem"
+fi
+
+# Create an SSL test server using the generated certificate.
+# See https://www.openssl.org/docs/apps/openssl.html
+# for more info.
+openssl s_server -cert $digital_cert -key $key_pair -accept 15900 -msg
