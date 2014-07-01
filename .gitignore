@@ -1,0 +1,4 @@
+*.swp
+certificate/
+untrusted_cert/
+ssl_client
